@@ -1,27 +1,12 @@
-/*
-更新日時
-2018/11/28/17:05
-2019/01/18/12:10 音声が出ないエラーs
+$(function(){
 
-感謝のURL
-https://github.com/skyway/skyway-js-sdk/blob/master/examples/p2p-broadcast/script.js
-https://qiita.com/yusuke84/items/54dce88f9e896903e64f#step3-1
-*/
-
-'use strict';
-
-//$(function(){ //やる意味あるらしいけどエラー出ねぇから嫌いやわ
-
-    //audio処理用
-    window.AudioContext = window.AudioContext || window.webkitAudioContext; 
-    
     let localStream = null;
     let peer = null;
     let existingCall = null;
     let remoteStream = null;
     let recorder = null;
     let audioSelect = $('#audioSource');
-
+    let videoSelect = $('#videoSource');
 
     navigator.mediaDevices.enumerateDevices()
         .then(function(deviceInfos) {
@@ -34,65 +19,21 @@ https://qiita.com/yusuke84/items/54dce88f9e896903e64f#step3-1
                     audioSelect.append(option);
                 } else if (deviceInfo.kind === 'videoinput') {
                     option.text(deviceInfo.label);
-                                    }
+                    videoSelect.append(option);
+                }
             }
-            
+            videoSelect.on('change', setupGetUserMedia);
+            audioSelect.on('change', setupGetUserMedia);
+            setupGetUserMedia();
         }).catch(function (error) {
             console.error('mediaDevices.enumerateDevices() error:', error);
             return;
         });
 
-    $('#peerid-ui').hide();
-    peer = new Peer(/*id,*/{
-            key: '9373b614-604f-4fd5-b96a-919b20a7c24e',    //APIkey
-            debug: 3
+    peer = new Peer({
+        key: '9373b614-604f-4fd5-b96a-919b20a7c24e',
+        debug: 3
     });
-
-    function startSelectedVideoAudio()  {
-        let audioSource = $('#audioSource').val();
-        let constraints = {
-            audio: {deviceId: {exact: audioSource},
-            echoCancellation:false},
-        };
-
-        if(localStream){
-            localStream = null;
-        }
-
-        navigator.mediaDevices.getUserMedia(constraints)
-            .then(function (stream) {
-                //$('#myStream').get(0).srcObject = stream;  //とりあえず消した
- 
-                //AudioContextを作成
-                var context  = new AudioContext();
-                //sourceの作成
-                var source = context.createMediaStreamSource(stream);
-                //panner の作成
-                var panner = context.createPanner();
-                panner.panningModel = 'HRTF';
-                source.connect(panner);
-                /*    
-                //StereoPannerの作成
-                var StereoPanner = context.createStereoPanner();
-                panner.connect(StereoPanner);
-                //StereoPanner.pan.value = 0;
-                */
-                //peer1の作成
-                var peer1 = context.createMediaStreamDestination();
-            
-                panner.connect(peer1); //ココの先頭変えるよ
-                localStream = peer1.stream;
-                console.log("streamを送信");
-
-                if(existingCall){
-                    existingCall.replaceStream(stream);
-                }
-
-            }).catch(function (error) {
-            console.error('mediaDevice.getUserMedia() error:', error);
-            return;
-        });
-    };
 
     peer.on('open', function(){
         $('#my-id').text(peer.id);
@@ -110,7 +51,6 @@ https://qiita.com/yusuke84/items/54dce88f9e896903e64f#step3-1
         }
         const　call = peer.joinRoom(roomName, {mode: 'sfu', stream: localStream});
         setupCallEventHandlers(call);
-        console.log("make call したよ");
     });
 
     $('#end-call').click(function(){
@@ -151,11 +91,40 @@ https://qiita.com/yusuke84/items/54dce88f9e896903e64f#step3-1
         }
     });
 
-       //オーディオシステムの選択
-    $('#start_video_button_W').click(function () {
-      startSelectedVideoAudio();
-      console.log("スタートしました");
-    });
+    function setupGetUserMedia() {
+        let audioSource = $('#audioSource').val();
+        let videoSource = $('#videoSource').val();
+        let constraints = {
+            audio: {deviceId: {exact: audioSource}},
+            video: {deviceId: {exact: videoSource}}
+        };
+        constraints.video.width = {
+            min: 320,
+            max: 320
+        };
+        constraints.video.height = {
+            min: 240,
+            max: 240        
+        };
+
+        if(localStream){
+            localStream = null;
+        }
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(function (stream) {
+                $('#myStream').get(0).srcObject = stream;
+                localStream = stream;
+
+                if(existingCall){
+                    existingCall.replaceStream(stream);
+                }
+
+            }).catch(function (error) {
+            console.error('mediaDevice.getUserMedia() error:', error);
+            return;
+        });
+    }
 
     function setupCallEventHandlers(call){
         if (existingCall) {
@@ -213,4 +182,4 @@ https://qiita.com/yusuke84/items/54dce88f9e896903e64f#step3-1
         $('#recording').show();
     }
 
-//});
+});

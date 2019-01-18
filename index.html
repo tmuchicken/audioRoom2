@@ -2,19 +2,26 @@
 <html>
 <head lang="ja">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Audio Room</title>
+    <title>おーでぃおるーむ。</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="audioRoom2.js"></script>
 </head>
 <body>
- 
+<div class="videosContainer">
+    <video id="myStream" autoplay muted="true"></video>
+</div>
+
 <div class="myControllerContainer">
     <p>Your id: <span id="my-id">...</span></p>
     <div class="select">
         <label for="audioSource">Audio input source: </label><select id="audioSource"></select>
     </div>
-          
-    <br>
-    <button href="#" id="start_video_button_W" >[Start]</button>
-    <!--  onclick="startSelectedVideoAudio()"  -->
+    <div class="select">
+        <label for="videoSource">Video source: </label><select id="videoSource"></select>
+    </div>
     <form id="make-call">
         <input type="text" placeholder="Join room..." id="join-room">
         <button type="submit">Join</button>
@@ -31,12 +38,4 @@
 </div>
 
 </body>
-
-<link rel="stylesheet" href="style.css">
-<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-<script type="text/javascript" src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="audioRoom.js"></script>
-
-
 </html>

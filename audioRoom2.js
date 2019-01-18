@@ -1,3 +1,13 @@
+/*
+更新日時
+2018/11/28/17:05
+2019/01/18/12:10 音声が出ないエラーs
+
+感謝のURL
+https://github.com/skyway/skyway-js-sdk/blob/master/examples/p2p-broadcast/script.js
+https://qiita.com/yusuke84/items/54dce88f9e896903e64f#step3-1
+*/
+
 'use strict';
 
 $(function(){
@@ -5,8 +15,10 @@ $(function(){
     let localStream = null;
     let peer = null;
     let existingCall = null;
+    /*
     let remoteStream = null;
     let recorder = null;
+    */
     let audioSelect = $('#audioSource');
     //let videoSelect = $('#videoSource');
 
@@ -129,7 +141,7 @@ $(function(){
             console.error('mediaDevice.getUserMedia() error:', error);
             return;
         });
-    }
+    };
 
     function setupCallEventHandlers(call){
         if (existingCall) {

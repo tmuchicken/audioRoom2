@@ -6,7 +6,7 @@ $(function(){
     let remoteStream = null;
     let recorder = null;
     let audioSelect = $('#audioSource');
-    let videoSelect = $('#videoSource');
+    //let videoSelect = $('#videoSource');
 
     navigator.mediaDevices.enumerateDevices()
         .then(function(deviceInfos) {
@@ -17,12 +17,12 @@ $(function(){
                 if (deviceInfo.kind === 'audioinput') {
                     option.text(deviceInfo.label);
                     audioSelect.append(option);
-                } else if (deviceInfo.kind === 'videoinput') {
+                } /*else if (deviceInfo.kind === 'videoinput') {
                     option.text(deviceInfo.label);
                     videoSelect.append(option);
-                }
+                }*/
             }
-            videoSelect.on('change', setupGetUserMedia);
+            //videoSelect.on('change', setupGetUserMedia);
             audioSelect.on('change', setupGetUserMedia);
             setupGetUserMedia();
         }).catch(function (error) {
@@ -57,6 +57,7 @@ $(function(){
         existingCall.close();
     });
 
+    /*
     $('#recording button').click(function(){
         if(recorder){
             recorder.stop();
@@ -90,14 +91,16 @@ $(function(){
             $('#downloadlink').hide();
         }
     });
+*/
 
     function setupGetUserMedia() {
         let audioSource = $('#audioSource').val();
-        let videoSource = $('#videoSource').val();
+        //let videoSource = $('#videoSource').val();
         let constraints = {
             audio: {deviceId: {exact: audioSource}},
-            video: {deviceId: {exact: videoSource}}
+            //video: {deviceId: {exact: videoSource}}
         };
+        /*
         constraints.video.width = {
             min: 320,
             max: 320
@@ -106,7 +109,7 @@ $(function(){
             min: 240,
             max: 240        
         };
-
+        */
         if(localStream){
             localStream = null;
         }

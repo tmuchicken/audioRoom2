@@ -2,6 +2,7 @@
 更新日時
 2018/11/28/17:05
 2019/01/18/12:10 音声が出ないエラーs
+2019/11/11/13:55
 
 感謝のURL
 https://github.com/skyway/skyway-js-sdk/blob/master/examples/p2p-broadcast/script.js
